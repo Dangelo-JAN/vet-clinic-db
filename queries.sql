@@ -11,8 +11,6 @@ SELECT * from animals WHERE 10.4 <= weight_kg <= 17.3;
 
 /*ADD a column and 2nd. pt. Queries*/
 
-ALTER TABLE animals ADD species varchar(100);
-
 BEGIN;
 
 UPDATE animals SET species = 'unspecified';
