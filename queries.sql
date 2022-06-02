@@ -15,24 +15,14 @@ ALTER TABLE animals ADD species varchar(100);
 
 BEGIN;
 
-UPDATE animals SET species = 'Digimon' WHERE name = 'Agumon';
-UPDATE animals SET species = 'Digimon' WHERE name = 'Gabumon';
-UPDATE animals SET species = 'Digimon' WHERE name = 'Devimon';
-UPDATE animals SET species = 'Digimon' WHERE name = 'Plantmon';
-UPDATE animals SET species = 'Digimon' WHERE name = 'Angemon';
-UPDATE animals SET species = 'Digimon' WHERE name = 'Boarmon';
-UPDATE animals SET species = 'Pokemon' WHERE name = 'Pikachu';
-UPDATE animals SET species = 'Pokemon' WHERE name = 'Charmander';
-UPDATE animals SET species = 'Pokemon' WHERE name = 'Squirtle';
-UPDATE animals SET species = 'Pokemon' WHERE name = 'Blossom';
-UPDATE animals SET species = 'Pokemon' WHERE name = 'Ditto';
+UPDATE animals SET species = 'unspecified';
 
 ROLLBACK;
 
 BEGIN;
 
 UPDATE animals SET species = 'Digimon' WHERE name LIKE '%mon';
-UPDATE animals SET species = 'Pokemon' WHERE species = NULL;
+UPDATE animals SET species = 'Pokemon' WHERE species IS NULL;
 
 COMMIT;
 
@@ -41,6 +31,8 @@ BEGIN;
 DELETE FROM animals;
 
 ROLLBACK;
+
+SELECT count(*) FROM animals;
 
 BEGIN;
 
@@ -55,8 +47,6 @@ COMMIT;
 SELECT count(*) FROM animals;
 SELECT count(*) FROM animals WHERE escape_attempts = 0;
 SELECT AVG(weight_kg) FROM animals;
-SELECT name FROM animals WHERE (escape_attempts = (SELECT MAX (escape_attempts) FROM animals)) OR (escape_attempts = 1) OR (escape_attempts = 0);
-SELECT MAX(weight_kg), MIN(weight_kg) FROM animals WHERE species = 'Digimon';
-SELECT MAX(weight_kg), MIN(weight_kg) FROM animals WHERE species = 'Pokemon';
-SELECT AVG(escape_attempts) FROM animals WHERE (species = 'Digimon') AND (date_of_birth BETWEEN '1990-01-01' AND '2000-01-01');
-SELECT AVG(escape_attempts) FROM animals WHERE (species = 'Pokemon') AND (date_of_birth BETWEEN '1990-01-01' AND '2000-01-01');
+SELECT name FROM animals WHERE escape_attempts = (SELECT MAX (escape_attempts) FROM animals);
+SELECT MAX(weight_kg), MIN(weight_kg) FROM animals GROUP BY species;
+SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth BETWEEN '1990-01-01' AND '2000-01-01' GROUP BY species;
